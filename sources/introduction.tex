@@ -1,0 +1,208 @@
+\section{Introduction - Syntax and Types} 
+\frame{\sectionpage}
+
+\subsection{Tools and Installation}
+		\begin{frame}[fragile]\frametitle{Haskell platform}
+		A full comprehensive, development environment for
+		Haskell\footnote{https://www.haskell.org/platform/index.html}\footnote{http://tryhaskell.org/}.
+		
+			\begin{block}{Installation}
+			\begin{itemize}
+			  \item 
+				\begin{lstlisting}[language=bash]
+					$sudo apt-get install haskell-platform
+				\end{lstlisting}
+			\end{itemize}
+			\end{block}
+			
+			\begin{description}
+			  \item[GHC]
+			  	 (Great Glasgow Compiler): State of the art
+			  \item[GHCi]
+			  	 A read-eval-print loop interpreter
+			  \item[Cabal]
+			   	Build/distribuite/retrieve libraries
+			  \item[Haddock]
+			   		A high quality documentation generation tool for Haskell 
+			\end{description}
+\end{frame}
+
+\subsection{Functional Programming}
+\begin{frame}\frametitle{Why Functional Programming? Why Haskell?} 
+		\begin{enumerate}
+		  \item Haskell's expressive power can improve
+		  productivity/understandability/maintanibility
+				\begin{itemize}
+			    \item Get best from compiled and interpreted languages
+			    \item Can understand what complex library does
+			  \end{itemize}
+		\item Strong typed - Catches bugs at \emph{compile time}
+		\item Powerful type inference engine
+		\item New Testing metologies
+		\item Automatic parallelization due to code purity
+		\end{enumerate}
+	\end{frame}
+	
+
+	\begin{frame}[fragile]\frametitle{What really is Haskell?}
+		\begin{block}{Purely Functional language}
+			\begin{itemize}
+			  \item Functions are first-class object (same things as data)
+			\item Deterministic - No Side Effect- same function call $\Rightarrow$ same
+			Ouput, EVER!\\
+			This \emph{referial transparency} leaves room for compiler optimization and 
+			allow to mathematically prove correctness.
+			\item \textbf{Evaluate expression} rather than execute instruction
+			\item Function describes what data are, not what what to do to\ldots
+			\item Everything (variables, data structures\ldots) is immutable 
+			\end{itemize}
+			
+		\end{block} 
+	
+	\end{frame}
+	
+	\begin{frame}[fragile]\frametitle{Haskell is Lazy}
+			\begin{columns}[T] % align columns
+			\begin{column}{.67\textwidth}
+
+			\begin{alertblock}{It won't execute anything until is \emph{really
+			needed}} \begin{lstlisting}[language=Haskell]
+					lazyFunction x y 
+						let f = x * (product [2..y])
+						in if x==0 then 0 else f
+					\end{lstlisting}
+					f is never computed if $x=0$.
+					\begin{itemize}
+					  	\item It is possible to define and work with infinite data structures
+					  \item Define new control structure just by defining a function.
+					  \item Reasoning about time/space complexity much more complicated
+					\end{itemize}
+			\end{alertblock}
+			
+
+			\end{column}%
+			\hfill%
+			\begin{column}{.45\textwidth}
+			\includegraphics[scale=0.5]{./images/homer}
+			\end{column}%
+			\end{columns}
+			
+			
+	\end{frame}
+\subsection{Hello world(s)}
+	\begin{frame}[fragile]\frametitle{Hello World}
+			\begin{block}{Our First Program}
+				Create a file \emph{hello.hs} and compile with the followings
+				\begin{lstlisting}[language=Haskell]
+						main = putStrLn "Hello World with Haskell"
+				\end{lstlisting}
+				\begin{lstlisting}[language=bash]
+						$ghc -o hello hello.hs
+				\end{lstlisting}
+			\end{block}
+			\begin{block}{GHCi}
+				Execute and play with GHCi by simply typing
+				\begin{lstlisting}[language=Haskell]
+						reverse [1..10]
+						:t foldl
+						[1..]
+						(filter (even) .reverse) [1..100]
+				\end{lstlisting}
+			\end{block}
+		\end{frame}
+		
+		\begin{frame}[fragile]\frametitle{Hello World - 2}
+		Another example, the $k^{th}$ Fibonacci number (type in GHCi):
+		\begin{lstlisting}[language=Haskell,xleftmargin=-1.5em]
+			let f a b k = if k==0 then a else f b (a+b) (k-1)
+		\end{lstlisting}
+		\begin{itemize}
+		  \item	Defines a recursive function \emph{f} that takes \emph{a,b,k} as parameters:
+		  \item Spaces are important. Are like function call operator
+		  \emph{()} in C-like languages.
+		  \item Wait, three space in $f\;a\;b\;k$: 3 function
+		  calls? YES!. \textbf{Every function in Haskell officially only takes one
+		  parameter}. 
+		  \item f infact has type
+		 \begin{lstlisting}[language=Haskell,xleftmargin=-1.5em]
+			f :: Integer->(Integer->(Integer->Integer))
+		\end{lstlisting}
+		i.e. a function that takes an integer and return (the \emph{-$>$}) a function
+		that takes an integer and return \ldots
+		 \begin{lstlisting}[language=Haskell,xleftmargin=-1.5em]
+			f 0 :: Integer->(Integer->Integer)
+			f 0 1 :: Integer->Integer
+			f 0 1 10 :: Integer
+		\end{lstlisting}
+		
+		\end{itemize}
+		
+		\end{frame}
+		
+		\begin{frame}[fragile]\frametitle{Hello World - 3}
+			
+			\begin{exampleblock}{Number of distinct powers counting (Project Euler #29)}
+			Consider all integer combinations of $a,b$ for $2 \leq a,b
+			\leq 100$:
+			how many distinct terms are in the sequence generated by $a^b$?
+			\hfill \\
+			\begin{smashedalign}
+			&2^2=4,2^3=8,\Highlight[blue][blue!20]{$2^4=16$},2^5=32 \\
+			&3^2=9,3^3=27,3^4=81,3^5=243\\
+			&\Highlight[blue][blue!20]{$4^2=16$},4^3=64,4^4=256,4^5=1024\\
+			&5^2=25,5^3=125,5^4=625,5^5=3125\\
+			\end{smashedalign}
+			\end{exampleblock} \pause
+			
+			\begin{exampleblock}{Na{\"i}ve solution}
+			\begin{lstlisting}[language=Haskell]
+				np :: Integer -> Integer -> Int
+				np a b = let l = [a^b |a<-[2..a],b<-[2..b]] 
+					 in length (remDup l)
+	     		where 
+	     			remDup = (map  head . group . sort)
+		\end{lstlisting}
+			\end{exampleblock}
+			
+		\end{frame}
+	
+	
+		\begin{frame}[fragile]\frametitle{Statically Typed}
+		\begin{itemize}
+			  \item Haskell is stricly typed
+			  \item Helps in thinking and express program structure
+			  \item \textbf{Turns run-time errors into compile-time errors}. 		  
+			   “If it compiles, it must be correct” is moslty true\footnote{It is still
+			   quite possible to have errors in logic even in a type-correct program}. 
+		\end{itemize}
+		\begin{block}{Abstraction: Every idea, algorithm, and piece of data should
+		occur exactly once in your code.}
+		Haskell features as parametric polymorphis, typeclasses high-order functions
+		greatly aid in fighting repetition.
+		
+		\end{block}
+			
+	\end{frame}
+	
+		\begin{frame}[fragile]\frametitle{What really is Haskell?}
+			\begin{exampleblock}{C-like vs Haskell}
+			Code as the one that follows
+			\begin{lstlisting}[language=C++]
+				int acc = 0;
+				for ( int i = 0; i < lst.length; i++ )
+ 					acc	 = acc + 3 * lst[i];
+			\end{lstlisting}
+			is full of low-level details of iterating over an array by
+			keeping track of a current index. It much elegantely translates in:
+			\begin{lstlisting}[language=Haskell]
+					sum (map (*3) lst)
+			\end{lstlisting}
+			\end{exampleblock}
+			Other examples:
+			\begin{lstlisting}[language=Haskell,xleftmargin=-1.5em]
+					partition (even) [49, 58, 76, 82, 83, 90]
+					--prime number generation
+					let pgen (p:xs) = p : pgen [x|x <- xs, x`mod`p > 0]
+					take 40 (pgen [2..])
+				\end{lstlisting}
+	\end{frame}

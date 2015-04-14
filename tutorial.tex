@@ -1,0 +1,62 @@
+\documentclass{beamer}
+\setbeamertemplate{navigation symbols}{}
+\usepackage{xcolor}
+\usepackage{xparse}
+
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily,
+  showstringspaces=false,
+  commentstyle=\color{red},
+  keywordstyle=\color{blue}
+}
+
+\newbox\FBox
+\NewDocumentCommand\Highlight{O{black}O{white}mO{0.5pt}O{0pt}O{0pt}}{%
+    \setlength\fboxsep{#4}\sbox\FBox{\fcolorbox{#1}{#2}{#3\rule[-#5]{0pt}{#6}}}\usebox\FBox}
+
+
+\lstset{language=Haskell,
+	basicstyle=\small\ttfamily,
+  showstringspaces=false,
+  commentstyle=\color{red},
+  keywordstyle=\color{blue},
+ aboveskip=-0.2,
+  belowskip=-0.8
+}
+\usetheme{JuanLesPins}
+\usecolortheme{beaver}
+
+\beamersetuncovermixins{\opaqueness<1>{25}}{\opaqueness<2->{15}}
+\title{A Journey in Functional Programming}
+\subtitle{An introduction to Haskell}
+\author{Davide Spataro\inst{1}}
+\institute[Universities of]
+{
+\inst{1}%
+Department of mathematics And Computer Science\\
+Univeristy of Calabria}
+
+\begin{document}
+\date{\today} 
+
+
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}\frametitle{Table of contents}\tableofcontents
+\end{frame} 
+
+		
+\input{introduction.tex}
+
+\input{basics1.tex}
+
+	
+
+
+
+
+
+\end{document}
