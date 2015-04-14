@@ -1,0 +1,147 @@
+	\section{Basics I}
+	\frame{\sectionpage}
+	
+	\subsection{Syntax}
+	
+	\begin{frame}[fragile]\frametitle{Syntax Basics}
+	\begin{itemize}
+	\item Arithmetic and Boolean algebra works as expected
+	\begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily]
+			v1 = 12
+			v2 = mod (v1+3) 10 
+			v3 = not $ True || (v2>=v1) --not (True || (v2>=v1))
+	\end{lstlisting}
+	\pause
+	\item Function definition is made up of two part: type and body. The body is
+	made up of several \emph{clause} that are evaluated (pattern matched)
+	\textbf{top to bottom}.
+	\begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily,
+	numbers=left] exp :: Integer -> Integer -> Integer
+			exp _ 0 = 1
+			exp 0 _ = 0
+			exp a b = a * (exp a (b-1)) 
+	\end{lstlisting}
+	\textbf{What if we swap line 2 and 3?}
+	\pause		
+	\item Comments:
+	 \begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily]
+		--this is an inline comment
+		{-
+			All in here is comment
+		-}				
+	\end{lstlisting}
+	\end{itemize}
+	\end{frame}
+	
+	
+	
+	\begin{frame}[fragile]\frametitle{Guards, where, let}
+		\begin{itemize}
+			\item \texttt{Guards},\texttt{let} and \texttt{where} constructs
+			\begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily,numbers=left]
+			fastExp :: Integer -> Integer-> Integer
+					fastExp _ 0 = 1
+					fastExp a 1 = a
+					fastExp a b 
+					 	|b < 0 = undefined
+					 	|even b = res*res
+					 	|otherwise = let next=(fastExp a (b-1)) in (a * next)  
+						  	where res=(fastExp a (div b 2))
+			\end{lstlisting}
+			Suppose we execute \emph{fastExp 2 7}. The call stack would be
+			\begin{itemize}
+			  \item  \texttt{fastExp 2 7} line 7 pattern match
+			  \pause
+			  \item  \texttt{fastExp 2 6} line 6 pattern match
+			  \pause
+			  \item  \texttt{fastExp 2 3} line 7 pattern match
+			 \pause
+			  \item  \texttt{fastExp 2 2} line 6 pattern match
+			 \pause
+			  \item  \texttt{fastExp 2 1} line 3 pattern match, STOP RECURSION
+			 \end{itemize}
+			 \pause
+			 In contrast to \texttt{where}, \texttt{let} are \texttt{expressions} and can
+			 be used anywhere\footnote{Here for more informations:
+			 https://wiki.haskell.org/Let\_vs\_Where}.
+
+	
+		\end{itemize}
+	\end{frame}
+	
+	
+	
+		\begin{frame}[fragile]\frametitle{\texttt{If}, \texttt{case}}
+		\begin{itemize}
+			\item \texttt{if} construct \
+			works as expected
+			\begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily,numbers=left]
+			div' n d = if d==0 then Nothing else Just (n/d)
+			\end{lstlisting}
+
+			\item \texttt{case} construct \\
+			 Useful when we don't wish to define a function every time we need to
+			 do pattern matching.
+			 
+			\begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily]
+			f p11 ... p1k = e1
+			...
+			f pn1 ... pnk = en
+			--where each pij is a pattern, is semantically equivalent to:
+			f x1 x2 ... xk = case (x1, ..., xk) of
+			(p11, ..., p1k) -> e1
+			...
+			(pn1, ..., pnk) -> en
+			\end{lstlisting}
+			All patterns of a function return the same type hence all the RHS of the
+			\texttt{case} have the same type
+	
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}[fragile]\frametitle{\texttt{case} construct: example}
+		\begin{exampleblock}{case construct example}
+		Pattern match ``outside'' the function definition. Note that all the cases
+		return the same type (a list of $b$'s in this case)
+		\begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily] 
+		cE :: (Ord a) :: a -> a -> [b]
+		cE a b xs = case (a `compare` b,xs) of
+        (_,[]) -> []
+        (LT,xs) -> init xs
+        (GT,xs) -> tail xs
+        (EQ,xs) -> [head xs]
+				
+			\end{lstlisting}
+		\end{exampleblock}
+	\end{frame}
+	
+	\begin{frame}[fragile]\frametitle{Ranges And List Comprehension}
+		\begin{exampleblock}{ranges}
+		Shortcut for  listing stuff that can be enumerated. What if we need to test if
+		a string contains a letter up to the lower case$j$? (Explicitly list all the
+		letters is not the correct answer).
+		\begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily] 
+			['a'..'j'] -- results in "abcdefghij" (String are [Char])			
+		\end{lstlisting}
+		It work even in construction infinite list
+		\begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily] 
+			[1,3..] -- results in [1,3,5,7,9,11,13,15......]			
+		\end{lstlisting}
+		and because of laziness we can (safely) do
+		\begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily] 
+			take 10 [1,3..] 		
+		\end{lstlisting}
+		\end{exampleblock}
+		\begin{exampleblock}{list comprehension}
+		It is a familiar concept for those who already have some experience in python
+		It resambles the mathematical set specification. For instance let's compute
+		the list of the factorial of the natural numbers 
+		 \begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily] 
+		 [product [2..x] | x<-[1..]] 		
+		\end{lstlisting} 
+		\end{exampleblock}
+		
+	\end{frame}
+	
+	
+	
