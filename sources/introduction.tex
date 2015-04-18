@@ -1,7 +1,164 @@
 \section{Introduction - Syntax and Types} 
 \frame{\sectionpage}
 
-\subsection{Tools and Installation}
+
+
+\subsection{Functional Programming}
+
+\begin{frame}\frametitle{Functional Programming} 
+		
+		\begin{columns}[T] % align columns
+			\begin{column}{.72\textwidth}
+				\begin{block}{Definition and Intuitive idea}
+				\begin{itemize}
+					  \item Computation is just \textbf{function evaluation} $\neq$ \textbf{program
+					  state manipulation}.
+					  \item Based on $\lambda-$calculus that is an alternative (to set theory)
+					  and convenient formalization of logic and mathematics for expressing
+					  \textbf{computation}
+					  \item Logic deduction $\Leftrightarrow$ $\lambda-$calculus thanks to the
+					  Curry-Howard correnspondence.
+					  \item A program is a proof!
+				\end{itemize}
+				\end{block}
+
+			\end{column}%
+				\hfill%
+				\begin{column}{.28\textwidth}
+				\begin{figure}
+					\centering
+					\includegraphics[scale=0.5]{images/Alonzo_Church.jpg}
+					\caption{Alonzo-Church, father of $\lambda-$calculus}
+				\end{figure}
+			\end{column}%
+		\end{columns}
+	\end{frame}
+
+\begin{frame}[fragile]\frametitle{Imperative vs Functional} 
+		\begin{itemize}
+		\item Imperative
+		  \begin{itemize}
+		    \item Focus on low-level \textbf{how}!
+		    \item A program is an ordered sequence of instructions
+		    \item Modifies/track the program's state
+		\end{itemize}
+	\end{itemize}
+	
+	\begin{itemize}
+		\item Functional
+		  \begin{itemize}
+		    \item Focus on High level \textbf{what}!
+		    \item Specify high-level transformation/constraint on the desidered result
+		    description.
+		\end{itemize}
+	\end{itemize}
+	
+	\begin{columns}[T] % align columns
+			\begin{column}{.7\textwidth}
+				\begin{block}{Imperative, suffer from the so called \textbf{indexitis}}
+				\begin{lstlisting}[language=c]
+					unsigned int sum=0;
+					for(int i=1;i<100;i++)
+						 sum+=i;
+				\end{lstlisting}
+				\end{block}
+
+			\end{column}%
+				\hfill%
+				\begin{column}{.28\textwidth}
+				\begin{block}{Functional}
+				\begin{lstlisting}[language=haskell]
+					sum [1..99]
+				\end{lstlisting}
+				\end{block}
+			\end{column}%
+		\end{columns}
+	\end{frame}
+	
+	
+\begin{frame}[fragile]\frametitle{What does this code do?} 
+\centering
+\begin{lstlisting}[language=c,basicstyle=\footnotesize\ttfamily]
+	void function (int *a, int n) {
+	    int i, j, p, t;
+	    if (n < 2)
+	        return;
+	    p = a[n / 2];
+	    for (i = 0, j = n - 1;; i++, j--) {
+	        while (a[i] < p)
+	            i++;
+	        while (p < a[j])
+	            j--;
+	        if (i >= j)
+	            break;
+	        t = a[i];
+	        a[i] = a[j];
+	        a[j] = t;
+	    }
+	    function(a, i);
+	    function(a + i, n - i);
+	}
+\end{lstlisting}
+\end{frame}	
+
+\begin{frame}[fragile]\frametitle{\ldots and this?} 
+\centering
+\hline \hfill \\
+\begin{lstlisting}[language=haskell,basicstyle=\footnotesize\ttfamily]
+function ::(Ord a) =>  [a] -> [a]
+function [] = []
+function (x:xs) = (function l) ++ [x] ++ (function g)
+   where 
+	    l = filter (<x) xs
+	    g = filter (>=x) xs
+\end{lstlisting}
+\hline
+	\begin{itemize}
+	  \item No indices
+	  \item No memory/pointer management
+	  \item No variable assignment
+	\end{itemize}	
+\end{frame}	
+	
+\begin{frame}\frametitle{Imperative vs Functional} 
+\begin{table}[h]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Characteristic}                     & \textbf{Imperative}                        & \textbf{Functional}                                                                            \\ \hline
+\textit{\textbf{Programmer focus}}          & Algorithm design                           & What the output look like?                                                                     \\ \hline
+\textit{\textbf{State changes}}             & {\color[HTML]{9A0000} Fundamental}         & {\color[HTML]{9A0000} Non-existent}                                                            \\ \hline
+\textit{\textbf{Order of execution}}        & Important                                  & \begin{tabular}[c]{@{}l@{}}Low importance\\  (compilers may do much work on this)\end{tabular} \\ \hline
+\textit{\textbf{Primary flow control}}      & {\color[HTML]{9A0000} Loops, conditionals} & {\color[HTML]{9A0000} Recursion and Functions}                                                 \\ \hline
+\textit{\textbf{Primary data unit}} & structures or classes       
+& Functions                                                                                      \\ \hline
+\end{tabular}
+}
+\end{table}
+
+\begin{itemize}
+  \item Other pure/quasi-pure languages: Erlang, Scala, F#, LISP.  
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}\frametitle{Why Functional Programming? Why Haskell?} 
+		\begin{enumerate}
+		  \item Haskell's expressive power can improve
+		  productivity/understandability/maintanibility
+				\begin{itemize}
+			    \item Get best from compiled and interpreted languages
+			    \item Can understand what complex library does
+			  \end{itemize}
+		\item Strong typed - Catches bugs at \emph{compile time}
+		\item Powerful type inference engine
+		\item New Testing metologies
+		\item Automatic parallelization due to code purity
+		\end{enumerate}
+	\end{frame}
+	
+	\subsection{Tools and Installation}
 		\begin{frame}[fragile]\frametitle{Haskell platform}
 		A full comprehensive, development environment for
 		Haskell\footnote{https://www.haskell.org/platform/index.html}\footnote{http://tryhaskell.org/}.
@@ -27,23 +184,6 @@
 			\end{description}
 \end{frame}
 
-\subsection{Functional Programming}
-\begin{frame}\frametitle{Why Functional Programming? Why Haskell?} 
-		\begin{enumerate}
-		  \item Haskell's expressive power can improve
-		  productivity/understandability/maintanibility
-				\begin{itemize}
-			    \item Get best from compiled and interpreted languages
-			    \item Can understand what complex library does
-			  \end{itemize}
-		\item Strong typed - Catches bugs at \emph{compile time}
-		\item Powerful type inference engine
-		\item New Testing metologies
-		\item Automatic parallelization due to code purity
-		\end{enumerate}
-	\end{frame}
-	
-
 	\begin{frame}[fragile]\frametitle{What really is Haskell?}
 		\begin{block}{Purely Functional language}
 			\begin{itemize}
@@ -52,9 +192,11 @@
 			Ouput, EVER!\\
 			This \emph{referial transparency} leaves room for compiler optimization and 
 			allow to mathematically prove correctness.
+			\item safely replace expressions by its (unique) result value
 			\item \textbf{Evaluate expression} rather than execute instruction
 			\item Function describes what data are, not what what to do to\ldots
 			\item Everything (variables, data structures\ldots) is immutable 
+			\item Multi-parameters function simply does not exists.
 			\end{itemize}
 			
 		\end{block} 
@@ -66,12 +208,7 @@
 			\begin{column}{.67\textwidth}
 
 			\begin{alertblock}{It won't execute anything until is \emph{really
-			needed}} \begin{lstlisting}[language=Haskell]
-					lazyFunction x y 
-						let f = x * (product [2..y])
-						in if x==0 then 0 else f
-					\end{lstlisting}
-					f is never computed if $x=0$.
+			needed}} 
 					\begin{itemize}
 					  	\item It is possible to define and work with infinite data structures
 					  \item Define new control structure just by defining a function.
@@ -89,6 +226,45 @@
 			
 			
 	\end{frame}
+	
+	
+	
+\begin{frame}[fragile]\frametitle{Understanding laziness}
+	\begin{lstlisting}[language=Haskell]
+		lazyEval 0 b = 1
+		lazyEval _ b = b
+	\end{lstlisting}
+	\begin{itemize}
+	  \item b never computed if the first parameter is zero
+	  \item this call is safe: 
+	  \begin{lstlisting}[language=Haskell] 
+	  	lazyEval 0	(2^123123123123123123123)
+	  \end{lstlisting}
+	  \item this is not 
+	    \begin{lstlisting}[language=Haskell] 
+	    lazyEval 1 	(2^123123123123123123123)
+	  \end{lstlisting}
+	\end{itemize}
+	\begin{exampleblock}{Strict evaluation: parameter are evaluated
+	  \textbf{before} to be passed to functions}
+	\begin{itemize}
+	 
+	\end{itemize}
+	
+	 	\begin{lstlisting}[language=c++,basicstyle=\footnotesize\ttfamily]
+	 	 	int cont=0;
+	 	 	auto fcall = [] (int a, int b) 
+	 	 	{if(a==0) return 1; else return b;};
+	 	 	auto f1 = [] () { cont++; return 1};
+	 	 	auto f2 = [] () { cont+=10; return 2};
+	    	fcall (f1(),f2()));
+	  \end{lstlisting} 
+	fcall will always  increments $cont$ twice! 
+	\end{exampleblock}
+			
+			
+\end{frame}
+	
 \subsection{Hello world(s)}
 	\begin{frame}[fragile]\frametitle{Hello World}
 			\begin{block}{Our First Program}
@@ -206,3 +382,4 @@
 					take 40 (pgen [2..])
 				\end{lstlisting}
 	\end{frame}
+	
