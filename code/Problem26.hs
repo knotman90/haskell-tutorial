@@ -23,12 +23,16 @@ Find the value of d < 1000 for which 1/d contains the longest recurring cycle in
 --modulo, current order
 order :: Integer -> Integer -> Integer
 order a ord 
-	| mod (10^ord) a == 1 = ord
-	| ord > a 			  = 0
-	| otherwise 		  = order a (ord+1) 
+	| mod (10^ord) a == 1 		= ord
+	| ord > a			= 0
+	| otherwise			= order a (ord+1) 
 
 
-maxo = (fst . last) $ sortBy (\x y -> (snd x) `compare` (snd y)) $ map (\x->(x,order x 1)) [1..1000]
+--maxo = (fst . last) $ sortBy (\x y -> (snd x) `compare` (snd y)) $ map (\x->(x,order x 1)) [1..1000]
+maxo = fst $  maximumBy comparing $ pp
+	where
+		comparing = (\(m,n) (p,q) -> n `compare` q)
+		pp 	  = map (\x->(x,order x 1)) (filter (\x-> mod x 10 > 0 ) [1,3..1000])
 
 
 main = do
