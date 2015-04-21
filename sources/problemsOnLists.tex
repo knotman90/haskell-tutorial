@@ -1,0 +1,92 @@
+\section{Coding - Problems on Lists}
+\frame{\sectionpage}
+
+\subsection{Last element}
+\begin{frame}[fragile]\frametitle{Last element}
+
+
+\begin{block}{Problem Statement}
+			Given a polymorphic list $l$ of type $[a]$, find the last element of l
+			(not using function $last$, I'm sorry).
+\end{block}	
+\textbf{Examples:}
+		\begin{lstlisting}[language=Haskell]
+					_last [1,2,3,4] =  4 
+		\end{lstlisting} 
+		\pause
+		\begin{lstlisting}[language=Haskell]
+					_last ["programming","haskell","is","cool"]= "cool" 
+		\end{lstlisting}
+					
+\pause \pause
+\begin{alertblock}{Solution}
+			\begin{lstlisting}[language=Haskell]
+					_last :: [a] -> a
+					_last [] 	 = error "Undefined operation"
+					_last (x:[]) = x
+					_last (x:xs) = _last xs 
+		\end{lstlisting}
+\end{alertblock}	
+
+\end{frame}
+
+\subsection{$k$ìth element}
+\begin{frame}[fragile]\frametitle{$k$'th element of a list}
+
+
+\begin{block}{Problem Statement}
+			Find the $k$'th element of a list where the first element has index
+			\mathbf{$1$}
+\end{block}	
+\textbf{Examples:}
+		\begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily]
+					elementAt 2 [3,35,32,33]  =  35 
+		\end{lstlisting}
+		\pause
+		\begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily]
+					elementAt 3 [('a',97),('b',98),('c',99)] = ('c',99)
+					elementAt 4 [('a',97),('b',98),('c',99)] = error "Index out of bound" 
+		\end{lstlisting}
+					
+\pause \pause
+\begin{alertblock}{Solution}
+			\begin{lstlisting}[language=Haskell]
+					elementAt :: Integer -> [a] -> a
+					elementAt  _ [] 	 = error "index out of bound"
+					elementAt 1 (x:_)	 = x
+					elementAt n (_:xs)   = elementAt (n-1) xs 
+		\end{lstlisting}
+\end{alertblock}	
+
+\end{frame}
+
+
+\subsection{Palindrome List}
+\begin{frame}[fragile]\frametitle{Palindromic List}
+
+
+\begin{block}{Problem Statement}
+			Write a function that returns a boolean value tha indicates whether the input
+			list is palindromic or not.
+			\mathbf{$1$}
+\end{block} \pause	
+\textbf{Examples:}
+		\begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily]
+					palindrome  "itopinonavevanonipoti"  =  True
+					palindrome  "[1,2,3,3,1]  =  False
+		\end{lstlisting}
+\pause
+\begin{alertblock}{Solution}
+			\begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily]
+					palindrome1 l = l== reverse l
+					
+					palindrome2 [] = True --empty list is palindrome
+					palindrome2 (_:[]) = True --one element is palindrome
+					palindrome2 l 
+    					| head l /= last l = False
+    					| otherwise 	= palindrome2 ((tail . init) l)
+					
+		\end{lstlisting}
+\end{alertblock}	
+
+\end{frame}
