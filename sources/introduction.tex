@@ -1,4 +1,4 @@
-\section{Introduction - Syntax and Types} 
+\section{Introduction - Functional Programming & Haskell } 
 \frame{\sectionpage}
 
 
@@ -287,7 +287,7 @@ function (x:xs) = (function l) ++ [x] ++ (function g)
 			\end{block}
 		\end{frame}
 		
-		\begin{frame}[fragile]\frametitle{Hello World - 2}
+		\begin{frame}[fragile]\frametitle{Hello Currying}
 		Another example, the $k^{th}$ Fibonacci number (type in GHCi):
 		\begin{lstlisting}[language=Haskell,xleftmargin=-1.5em]
 			let f a b k = if k==0 then a else f b (a+b) (k-1)
@@ -312,8 +312,61 @@ function (x:xs) = (function l) ++ [x] ++ (function g)
 		\end{lstlisting}
 		
 		\end{itemize}
+		\end{frame}
+		
+		\begin{frame}[fragile]\frametitle{Hello Currying - 2}
+		Currying directly and naturally address the  high-order functions support
+		 Haskell machinery.
+		 \begin{alertblock}{High-order function:}
+		 \begin{itemize}
+		   \item Take function as parameter
+		   \item returns a function%\footnote{In haskell \textbf{return exp} has a
+		   % different meaning respect to the classic: \textit{return execution of the program to
+		   % the caller, and report the valfooue of exp}} 
+		\end{itemize}
+		 \end{alertblock}
+		 
+		 \begin{exampleblock}{zipwith}
+		  \begin{itemize}
+		   \item Combines two list of type $a$ and $b$ using a function f that takes a
+		   parameter of type a and one of type b and return a value of type $c$,
+		   producing a list of elements of type $c$.
+		   \item 
+		 \begin{lstlisting}[language=Haskell,xleftmargin=-0.3em]
+			zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]
+		\end{lstlisting}
+		\end{itemize}
+		 \end{exampleblock}
+		
 		
 		\end{frame}
+		
+		
+		
+		\begin{frame}[fragile]\frametitle{Hello Currying - 2}
+		
+		\begin{lstlisting}[language=Haskell,xleftmargin=-0.3em]
+			zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]
+			zipWith _ _ [] = []
+			zipWith _ [] _ = []
+			zipWith f (x:xs) (y:ys) = f x y : zipWith f xs ys
+		\end{lstlisting}
+		 \begin{exampleblock}{usage examples}
+		  \begin{lstlisting}[language=Haskell,xleftmargin=-0.3em]
+			zipWith (+) [1,2,3] [4,5,6] = [5,7,9]
+			zipWith (*) [1,2,3] [4,5,6] = [4,10,18]
+			zipWith (\a b ->(+).(2*))) [1..] [1..]
+		\end{lstlisting}
+		What about this call? (missing one parameter)
+		\begin{lstlisting}[language=Haskell]
+		let l = zipWith (*) [1,2,3] 
+		l [3,2,1]
+		\end{lstlisting}
+		 \end{exampleblock}
+		
+		\end{frame}
+		
+		
 		
 		\begin{frame}[fragile]\frametitle{Hello World - 3}
 			
@@ -332,12 +385,14 @@ function (x:xs) = (function l) ++ [x] ++ (function g)
 			
 			\begin{exampleblock}{Na{\"i}ve solution}
 			\begin{lstlisting}[language=Haskell]
-				np :: Integer -> Integer -> Int
-				np a b = let l = [a^b |a<-[2..a],b<-[2..b]] 
-					 in length (remDup l)
-	     		where 
-	     			remDup = (map  head . group . sort)
+			np a b = length $ nub l
+				where l = [c^d | c<-[2..a],d<-[2..b]]
 		\end{lstlisting}
+% 				np :: Integer -> Integer -> Int
+% 				np a b = let l = [a^b |a<-[2..a],b<-[2..b]] 
+% 					 in length (remDup l)
+% 	     		where 
+% 	     			remDup = (map  head . group . sort)
 			\end{exampleblock}
 			
 		\end{frame}

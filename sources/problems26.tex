@@ -1,0 +1,103 @@
+\section{Coding - Project Euler Problem 26}
+\frame{\sectionpage}
+
+	\subsection{Problems 26}
+	
+	\begin{frame}[fragile]\frametitle{Problems 26}
+
+
+	\begin{columns}[T] % align columns
+			\begin{column}{.52\textwidth}
+\begin{block}{Problem Statement}
+				A unit fraction contains 1 in the numerator.
+				Where 0.1(6) means 0.166666..., and has a 1-digit recurring cycle. It can be
+				seen that 1/7 has a 6-digit recurring cycle.\hfill \\
+\textbf{Find the value of $d < 1000$ for which $1/d$ contains the longest recurring
+			cycle in its decimal fraction part}.
+\end{block}	
+			\end{column}%
+				\begin{column}{.48\textwidth}
+				\begin{itemize}
+				  \item $1/2 =  0.5$ - 0-recur
+				  \item  $1/3 =  0.(3)$ - 1-recur
+				  \item $1/4 =  0.25$ - 0-recur
+				  \item $1/5 =  0.2$ - 0-recur
+				  \item $1/6 =  0.1(6)$ - 1-recur
+				  \item $1/7 =  0.(142857)$ - 6-recur
+				  \item $1/8 =  0.125$ - 0-recur
+				  \item $1/9 =  0.(1)$ - 1-recur 
+				  \item $1/10 =  0.1$ - 0-recur
+				\end{itemize}
+			\end{column}%
+		\end{columns}
+	\end{frame}
+	
+	
+	\begin{frame}[fragile]\frametitle{Problems 26 - Solution}
+	\begin{alertblock}{Key idea: Find the order of 10 in $\mathbb{N}/p\mathbb{N}$}
+	\textbf{The length of the repetend (period of the repeating decimal) of $1/p$
+	is equal to the order of $10$ modulo $p$}. If $10$ is a primitive root modulo
+	$p$, the repetend length is equal to $p - 1$; if not, the repetend length is a
+	factor of $p - 1$.
+	This result can be deduced from Fermat's little theorem, which states that
+	$10p-1 \equiv 1 \;(mod\; p)$.(Wikipedia)
+	\end{alertblock}
+	
+	\begin{block}{Reminder: order of an element $g$ in $\mathbb{N}/p\mathbb{N}}
+	\textbf{The smallest power $n$ of $g$ s.t. $g^n \equiv 1 \;(mod\; p)$}. 
+	\end{block}
+
+	\end{frame}
+	
+	
+	\begin{frame}[fragile]\frametitle{Problems 26 - Order finding example}
+	\begin{exampleblock}{Find the order of 10 in $\mathbb{N}/13\mathbb{N}}
+	\[10^1 \equiv 10 \;(mod\; 13) \]
+	\[10^2 \equiv 9 \;(mod\; 13) \]
+	\[10^3 \equiv 12 \;(mod\; 13) \]
+	\[10^4 \equiv 3 \;(mod\; 13) \]
+	\[10^5 \equiv 4 \;(mod\; 13) \]
+	\[\mathbf{10^6 \equiv 1 \;(mod\; 13)} \]	
+	\begin{itemize}
+	  \item 6 is the order of 10 \;(modulo 13)
+	  \item
+	    \begin{lstlisting}[language=Haskell]
+		map (\a -> mod (10^a) 13) [1..12]
+		\end{lstlisting}
+	\end{itemize}
+	
+	\end{exampleblock}
+
+
+
+	\end{frame}
+	
+	
+		\begin{frame}[fragile]\frametitle{Problems 26 - Order finding example}
+		
+		\begin{exampleblock}{So now the problem is. Compute the order of numbers
+		$n<1000$ and return the one that have maximum order}
+		 \begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily]
+		--modulo, current order
+		order :: Integer -> Integer -> Integer
+		order a ord 
+			| mod (10^ord) a == 1 = ord
+			| ord > a 			  = 0
+			| otherwise 		  = order a (ord+1)
+		\end{lstlisting} 
+	\end{exampleblock}
+	
+	\begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily]	
+	maxo = fst $  maximumBy comparing $ pp
+	  where
+	    comparing 	= (\(m,n) (p,q) -> n `compare` q)
+	     pp  = map (\x->(x,order x 1)) 
+	          (filter (\x-> mod x 10 > 0 ) [1,3..1000])
+		 
+		 
+	\end{lstlisting}
+	
+
+
+
+	\end{frame}

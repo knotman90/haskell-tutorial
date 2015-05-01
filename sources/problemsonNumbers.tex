@@ -1,0 +1,73 @@
+\section{Poblem on Numbers}
+\frame{\sectionpage}
+\subsection{Primality Test}
+\begin{frame}[fragile]\frametitle{Primality Tes}
+
+
+\begin{block}{Problem Statement}
+			Determine whether a given integer number is prime.
+\end{block} \pause	
+\textbf{Examples:}
+		\begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily]
+					isPrime  57601 =  True
+					isPrime  1235  =  False
+		\end{lstlisting}
+\pause
+\begin{alertblock}{Solution}
+			\begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily]
+					isPrime l k 
+						| k > l = False
+						| mod l k ==0 = False
+						| otherwise = isPrime l (k+1) 
+					
+		\end{lstlisting}
+\end{alertblock}	
+
+\end{frame}
+
+\subsection{Greatest common divisor}
+\begin{frame}[fragile]\frametitle{GCD}
+
+
+\begin{block}{Problem Statement}
+			Implement the Euclid Method to find the greatest common divisor of two
+			integer.
+			 \end{block} \pause	
+\textbf{Examples:}
+		\begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily]
+					gcd' 30 12 	  =  6
+					gcd' 5 25     =  5
+		\end{lstlisting}
+\pause
+\begin{alertblock}{Solution}
+			\begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily]
+					gcd' 0 y = y
+					gcd' x y = gcd' (mod y x) x
+		\end{lstlisting}
+\end{alertblock}	
+
+\end{frame}
+
+\subsection{Euler's torient}
+\begin{frame}[fragile]\frametitle{Totient function}
+
+\begin{block}{Problem Statement}
+Calculate Euler's totient function phi(m).
+
+Euler's so-called totient function $\phi(m)$ is defined as the number of
+positive integers $r$ $(1 \leq r < m)$ that are \textbf{coprime} to m.
+\end{block} \pause
+\textbf{Examples:}
+\begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily]
+			totient 10 	  = 4 
+			totient 57601 = 57600 --57601 is prime^^
+		\end{lstlisting}
+\pause
+\begin{alertblock}{Solution}
+			\begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily]
+					totient n = length [e | e <- [1..n], coprime e n]
+						where coprime e n = gcd n e ==1
+		\end{lstlisting}
+\end{alertblock}	
+
+\end{frame}

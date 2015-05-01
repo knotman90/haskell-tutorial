@@ -1,0 +1,51 @@
+\section{Basics - List Functions}
+\frame{\sectionpage}
+
+\subsection{List Functions - length,++ }
+	\begin{frame}[fragile]\frametitle{Lists}
+		List is the most used Data structure in Haskell
+		\begin{itemize}
+		\item Homogenous - Only objects of the same type
+		\item Denoted by $[$ CONTENT OF THE LIST $]$
+		\item $[$ $[$"passions"$]$, $[$"poetry"$]$, $[$"and"$]$, $[$"the"$]$,
+		$[$"ego"$]$ $[$"have"$]$, $[$"been"$]$, $[$"seen"$]$, $[$"as"$]$, $[$"perpetual"$]$
+		$[$"explosions?$]$$]$
+		\item String are \textbf{List of Char}. We can use list function of
+		strings
+		\end{itemize}
+		\begin{exampleblock}{lenght}
+		\texttt{length} is a function that return the length of a List
+		 \begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily]
+			length [1,2,3,4]
+			length "Hi guys" 
+		\end{lstlisting}
+		\end{exampleblock}
+	\end{frame}
+	
+	\begin{frame}[fragile]\frametitle{Let's try them}
+		\begin{itemize}
+		  \item head, last, init, tail
+		  \item map
+		  \item \textbf{fold}s are very important but need separate tutorial!
+		  \item find
+		  replicate, cycle, take(while), drop(while) 
+		  \item maximum 
+			\end{itemize}
+			
+		
+	\end{frame}
+	
+		
+	\begin{frame}[fragile]\frametitle{Concat}
+		A common task is to merge two list. Done using the \textbf{++} operator
+		\begin{itemize}
+		  \item 
+		  \begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily]
+			[1..3] ++ [4..10], "Hi" ++ "Guys"
+		\end{lstlisting}
+		\item When possible use (:) instead of (++), the list concatenation operator.
+		It's much more faster!
+		\end{itemize}
+		
+	\end{frame}
+	

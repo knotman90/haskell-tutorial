@@ -1,0 +1,49 @@
+\section{Find Best Variance - Stock Data}
+\subsection{I/O - Find Best Variance}
+\frame{\sectionpage}
+
+\begin{frame}[fragile]\frametitle{Best Variance Day}
+
+\begin{block}{Problem Statement}
+Write a program that read a file containing daily stock data.
+Each line of the file records data regarding prices of a good registered at
+regular time interval during each day.
+Fine the day which have the maximum variance between opnening and closing price
+(first and last price record).
+\end{block} 
+\textbf{File content:}
+\begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily]
+2012-03-30,32.40,32.41,32.04,32.26,31749400,32.26
+2012-03-29,32.06,32.19,31.81,32.12,37038500,32.12
+2012-03-28,32.52,32.70,32.04,32.19,41344800,32.19
+		\end{lstlisting}
+
+\end{frame}
+
+
+\begin{frame}[fragile]\frametitle{Solution}
+
+\textbf{The Solution.} \textit{cabal install split}
+\begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily]
+module Main where
+import System.Environment (getArgs)
+import Data.List.Split (splitOn)
+import Data.List (maximumBy)
+
+--main entry point
+main = do
+	(fileName:_) <- getArgs 
+	strF <- readFile fileName
+	putStrLn $ maxDay strF	
+
+maxDay ::String -> String
+maxDay s = snd $ maximum  ss
+ where 
+  ss = map (var . (splitOn ",")) $ lines s
+
+var xs = abs diff
+  where diff=((read (xs!!1)) - (read (last xs)),head xs)
+\end{lstlisting}
+
+
+\end{frame}

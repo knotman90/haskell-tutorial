@@ -87,7 +87,8 @@
 			f p11 ... p1k = e1
 			...
 			f pn1 ... pnk = en
-			--where each pij is a pattern, is semantically equivalent to:
+			--where each pij is a pattern, 
+			--is semantically equivalent to:
 			f x1 x2 ... xk = case (x1, ..., xk) of
 			(p11, ..., p1k) -> e1
 			...
@@ -136,7 +137,31 @@
 		
 	\end{frame}
 	
-	\subsection{List Comprehension}
+	\subsection{List}
+	\begin{frame}[fragile]\frametitle{List are useful!}
+	\begin{itemize}
+	  \item Colletcion of elements of the \textbf{SAME TYPE}.
+	  \item Delimited by square brackets and elements separated by commas.
+	  \item List che be \textit{consed}. The \textbf{cons} operator (:) is used to
+	  incrementally build list putting an element at its head.
+	  \item empty list is $[]$
+	  \item cons is a function that takes two parameter 
+	  \begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily] 
+			(:) :: a -> [a] -> [a]
+	\end{lstlisting} 
+		
+	  \begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily] 
+			1:2:3:4:[]	
+	\end{lstlisting} 
+	
+
+	\end{itemize}
+		
+			
+		
+	\end{frame}
+	
+	
 	\begin{frame}[fragile]\frametitle{List Comprehension}
 		\begin{exampleblock}{list comprehension}
 		It is a familiar concept for those who already have some experience in python
@@ -160,5 +185,39 @@
 			
 		
 	\end{frame}
+	
+	
+	\subsection{Lambda Functions}
+	\begin{frame}[fragile]\frametitle{Lambda functions - The Idea}
+		\begin{itemize}
+		  \item Anonymous functions i.e. no need to give it a name
+		  \item $\lambda y x \rightarrow$ $2x+x^y$ translates in
+		   \begin{lstlisting}[language=Haskell] 
+			(\x y -> 2*x + x^y)
+		\end{lstlisting}
+		\item Usually used withing high order function context.
+		\begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily] 
+			map (\x -> x*x-3) [1,10..300]
+			map (\x -> let p = ord x in if even p then p else p^2) 
+			      "Lambda functions are cool!"
+		\end{lstlisting}
+		\end{itemize}
+		
+		
+		\begin{itemize}
+		  \item $f= (\backslash x_1 .. x_n  -> exp(x_1..x_n)) (v_1, ..,v_k) $
+		   substitute each occurence of the free variable $x_i$ with the
+		  value $v_i$. If $k<n$ f is again a function.
+		  \item 
+		\begin{lstlisting}[language=Haskell,basicstyle=\footnotesize\ttfamily] 
+			let f = (\x y z -> x+y+z)
+			let sum3 = f 2 3 = (\z -> 2+3+z) --again a function
+			sum23z 4 -> = 9 
+		\end{lstlisting}		  
+		\end{itemize}
+			
+		
+	\end{frame}
+	
 	
 	
