@@ -2,6 +2,12 @@ module Ch4 where
 import Data.Char (digitToInt, isDigit)
 
 
+myGroupBy_fold :: (a -> a -> Bool) -> [a] -> [[a]]
+myGroupBy_fold p  = foldr step []
+	where 
+		step x [] = [[x]]
+		step x l@(aa@(a:_):ls) = if (p x a) then ((x:aa)):ls else [x]:l
+
 --let p = (==) in quickCheck (\s ->myGroupBy p s == groupBy p s) --this to check that the function axtually is correct!
 myGroupBy :: (a-> a-> Bool) -> [a] -> [[a]]
 myGroupBy p l     = myGroupBy' p [] l      
