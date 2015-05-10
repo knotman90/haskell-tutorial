@@ -2,6 +2,40 @@ module Ch4 where
 import Data.Char (digitToInt, isDigit)
 
 
+{-
+How many of the following Prelude functions can you rewrite using list folds?
+For those functions where you can use either foldl' or foldr, which is more appropriate in each case?
+-}
+
+--words
+--unlines
+
+
+--cycle ------------------------------------------------------- 
+myCycle :: [a] -> [a]
+myCycle  [] =  error "Empty lists"
+myCycle  xs =  xs ++ (myCycle xs)
+
+myCycle_fold :: [a] -> [a]
+myCycle_fold [] = error "Empty Lists"
+myCycle_fold  xs  = foldr (\_ acc -> xs++acc) [] [1..]
+
+
+
+--any -------------------------------------------------------
+my_any :: (a->Bool) -> [a] -> Bool
+my_any _ [] = False
+my_any p (x:xs) 
+	| p x 	    = True
+	| otherwise = my_any p xs
+
+--let p = (even) in quickCheck (\s ->any p s == my_any_fold p s)
+my_any_fold :: (a->Bool) -> [a] -> Bool
+my_any_fold p = foldr (\x acc-> acc || p x) False
+
+
+
+
 myGroupBy_fold :: (a -> a -> Bool) -> [a] -> [[a]]
 myGroupBy_fold p  = foldr step []
 	where 
