@@ -1,25 +1,61 @@
 module Ch4 where
-import Data.Char (digitToInt, isDigit)
+import Data.Char (digitToInt, isDigit,isUpper)
 
 
+
+--example count the number of word in a string that satisfy a predicate p
+numElmSatisfy :: (a->Bool)-> [a] -> Int
+numElmSatisfy p = (length . (filter p)) 
+
+--numWordsSatisfy :: (a->Bool)-> [a] -> Int
+numWordsSatisfy p = (length . (filter p) . words) 
+
+numWordsStartsUpper = let p = (isUpper . head) in numWordsSatisfy p
+
+--function composition (.) in Prelude
+compose :: (b->c) -> (a->b) -> a -> c
+compose f g a =  f (g a)
+
+
+--does not produce the null element at the end of the list also implementable as 
+myTails'' = init . myTails
+
+myTails' :: [a] -> [[a]]
+myTails' ys@(_:xs) = ys :  myTails' xs
+myTails' _	= []
+
+
+myTails :: [a] -> [[a]]
+myTails [] 	= [[]]
+myTails xs 	= let tal = (tail xs)in [xs]++ (myTails tal)
+ 
 {-
 How many of the following Prelude functions can you rewrite using list folds?
 For those functions where you can use either foldl' or foldr, which is more appropriate in each case?
 -}
 
---words
---unlines
+--unlines------------------------------------------------------- 
+myUnlines :: [String] -> String
+myUnlines = foldr (\x acc -> x++"\n"++acc) ""
 
-
+--words ------------------------------------------------------- 
+myWords :: String -> [String]
+myWords = foldr step []
+	where
+	step x acc@(y:ys) = if (x=='\n') then ([]:acc) else ((x:y):ys)
+	step x acc =  [[x]]
+		
 --cycle ------------------------------------------------------- 
+infList :: [Int]
+infList=repeat 1
+
 myCycle :: [a] -> [a]
 myCycle  [] =  error "Empty lists"
 myCycle  xs =  xs ++ (myCycle xs)
 
-myCycle_fold :: [a] -> [a]
-myCycle_fold [] = error "Empty Lists"
-myCycle_fold  xs  = foldr (\_ acc -> xs++acc) [] [1..]
-
+myCycle_foldr :: [a] -> [a]
+myCycle_foldr [] = error "Empty Lists"
+myCycle_foldr  xs  = foldr (\_ acc -> xs++acc) [] (infList) --[1..]
 
 
 --any -------------------------------------------------------
