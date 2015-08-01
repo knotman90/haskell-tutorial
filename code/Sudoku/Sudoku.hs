@@ -1,6 +1,7 @@
 import Data.Char(intToDigit, digitToInt)
 import Data.List ((\\),sortBy,intercalate)
 import System.Environment (getArgs)
+import Control.Monad (forM)
 data Board= Board [Square]
 	deriving(Show)
 
@@ -119,15 +120,22 @@ getBoard :: Board -> [[Char]]
 getBoard (Board sqs) = [ [ getDigit d | Square _ row' _ d <- sqs, row' == row ] | row <- allDigits ]
   where getDigit (Right d) = d
         getDigit _ = '0'
+
 		
 main:: IO()
 main = do
 	[file] <-getArgs
 	str<-readFile file
-	let b = solve str
-	case b of
-		Nothing -> print "NO SOLUTION"
-		Just bb -> print ((concat.getBoard) bb)
+	let sudokus = lines str
+	let solutions = map solve sudokus
+	let printableSol = map (printSol) solutions
+	print printableSol
+	
+
+printSol maybeSol= do	
+	case maybeSol of
+		Nothing ->  "NO SOLUTION"
+		Just bb ->  ((concat.getBoard) bb)
 	
 
 --if the input is correct -> 81 digits between 0 and 9!
