@@ -1,11 +1,17 @@
+module Sudoku where
+
 import Data.Char(intToDigit, digitToInt)
 import Data.List ((\\),sortBy,intercalate)
-import System.Environment (getArgs)
 import Control.Monad (forM)
+import Data.Maybe (isJust)
+import Control.DeepSeq
+
+
 data Board= Board [Square]
 	deriving(Show)
 
 --DO A n*n solver
+--solve eurler problem96
 
 -- A Square contains its column (ColDigit), row (RowDigit), and
 -- which 3x3 box it belongs to (BoxDigit).  The box can be computed
@@ -51,10 +57,7 @@ getRow (Board sdk) row = [getDigit d | Square _ row' _ d <-sdk , row'==row]
 mkSquare :: ColDigit->RowDigit->Digit->Square
 mkSquare c r d 
 	| (legalDigit r && legalDigit c && legalDigit d) = Square c r (boxDigit c r) (Right d)
-	| otherwise = if not (legalDigit r) then error "Unvalid mkquare column"
-				 else if not (legalDigit r) then error ("Unvalid mkquare row " ++ (show r))
-				 else if not (legalDigit d) then error ("Unvalid mkquare digit " ++ (show d)++" "++ (show c)++" "++ (show r))
-				 else error (" unkown!!" ++ (show c)++" "++ (show r)++" "++ (show d))
+	| otherwise = error "Unvalid mkquare"
 		where
 			legalDigit dd = dd `elem` allDigits
 
@@ -73,10 +76,9 @@ setSquare sq@(Square scol srow sbox (Right d))(Board sqs) = Board (map set sqs)
 			| scol==ocol || srow==orow || sbox==obox = Square ocol orow obox (checkEither ods)
 			| otherwise 							 = osq
 		
-		checkEither (Left  lds ) 	= Left (lds \\ [d])
+		checkEither (Left  lds ) 			= Left (lds \\ [d])
 		checkEither r@(Right d'   ) | d==d'	= error "Already set this square"
 		checkEither dd = dd
-		
 setSquare _ _ = error "Bad call to setSquare"
 
 
@@ -121,27 +123,12 @@ getBoard (Board sqs) = [ [ getDigit d | Square _ row' _ d <- sqs, row' == row ] 
   where getDigit (Right d) = d
         getDigit _ = '0'
 
-		
-main:: IO()
-main = do
-	[file] <-getArgs
-	str<-readFile file
-	let sudokus = lines str
-	let solutions = map solve sudokus
-	let printableSol = map (printSol) solutions
-	print printableSol
-	
 
-printSol maybeSol= do	
-	case maybeSol of
-		Nothing ->  "NO SOLUTION"
-		Just bb ->  ((concat.getBoard) bb)
-	
 
 --if the input is correct -> 81 digits between 0 and 9!
 readBoard :: String -> Board
 readBoard sdkstr 
-	| length sdkstr == 81 && (foldr1 (&&) (map (`elem` allDigits_zero) sdkstr))==True 
+	| length sdkstr == 81 {-&& (foldr1 (&&) (map (`elem` allDigits_zero) sdkstr))==True -}
 												= (makeSquareList initBoard sdkstr 1 1)
 	| otherwise = error "Malformed Input"
 
@@ -150,7 +137,7 @@ makeSquareList:: Board -> String->Int ->Int->Board
 makeSquareList brd [] _ _ 			  = brd 
 makeSquareList brd (dig:digs) col row = makeSquareList brd' digs (fst ncoord)  (snd ncoord)
 			where 
-				brd' 	= 	if 	 (dig `elem` allDigits)
+				brd' 	= 	if 	 (dig /= '0')
 							then setSquare (mkSquare (intToDigit col) (intToDigit row) dig) brd
 							else brd			
 				ncoord	= 	if (col < 9)
